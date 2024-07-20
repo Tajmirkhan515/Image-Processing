@@ -1,0 +1,54 @@
+Q: What is Open CV?
+Ans: OpenCV (Open Source Computer Vision Library) is a powerful and widely-used library for computer vision and image processing tasks. It provides tools and functions to perform a variaty of task such as. 
+1: Image and Video Processing (Reading, Writing, and displying images and videos)
+
+Q: what is PyTorch?
+    Opensource ML library, developed by Facebook AI Researcher lab. Its used for developing and training deep learning models. 
+
+Q: Transformers?
+Ans:  Transformers are a type of deep learning model architecture that have revolutionized NLP, computer vision and audio processing. They are desgined to handle sequantial data. High effective for tasks like language translation, text generation, and more. the key innovation of transformers is the self-attention maechansim, which allow the model to weigh the importance of different words in a sentence, regardless of their position. 
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+from transformers import BlipProcessor, BlipForConditionalGeneration
+from PIL import Image
+from transformers import BlipProcessor, BlipForConditionalGeneration
+from PIL import Image, UnidentifiedImageError
+import requests
+
+# Load the processor and model
+processor = BlipProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
+model = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-base")
+
+# Load an image from a URL
+# Load an image from a URL
+url = 'https://upload.wikimedia.org/wikipedia/commons/4/47/PNG_transparency_demonstration_1.png'  # Publicly available image URL
+
+"""try:
+    response = requests.get(url)
+    response.raise_for_status()  # Check if the request was successful
+    image = Image.open(BytesIO(response.content))
+except requests.exceptions.RequestException as e:
+    print(f"Error fetching image: {e}")
+    exit()
+except UnidentifiedImageError as e:
+    print(f"Error identifying image: {e}")
+    exit()"""
+image_path="C:/Users/mf19-14/llama/apple.png"
+try:
+    image = Image.open(image_path)
+except FileNotFoundError as e:
+    print(f"Error: {e}")
+    exit()
+except UnidentifiedImageError as e:
+    print(f"Error identifying image: {e}")
+    exit()
+
+# Process the image and generate a caption
+inputs = processor(images=image, return_tensors="pt")
+out = model.generate(**inputs)
+caption = processor.decode(out[0], skip_special_tokens=True)
+
+print("Generated Caption:", caption)
